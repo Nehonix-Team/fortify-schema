@@ -38,8 +38,8 @@ import { Interface } from "fortify-schema";
 // Define schemas with familiar TypeScript-like syntax
 const UserSchema = Interface({
   id: "uuid",
-  email: "email!", // 🆕 Required (non-empty) email
-  name: "string(2,50)!", // 🆕 Required string with length constraints
+  email: "email", 
+  name: "string(2,50)", 
   age: "number(18,120)?",
   role: "admin|user|guest",
 
