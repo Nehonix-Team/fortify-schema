@@ -40,7 +40,7 @@
  *
  * const UserSchema = Interface({
  *   id: "number",
- *   email: "email",
+ *   email: "email", 
  *   name: "string",
  *   age: "number?",                        // Optional
  *   status: Make.union("active", "inactive"),

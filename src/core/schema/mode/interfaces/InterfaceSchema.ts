@@ -935,6 +935,9 @@ export class InterfaceSchema<T = any> {
       required: isRequired,
     } = ConstraintParser.parseConstraints(fieldType);
 
+    // console.log(`Parsed: type=${parsedType}, required=${isRequired}, optional=${isOptional}`);
+    console.log(`Parsed: type=${parsedType}, required=${isRequired}, optional=${isOptional}`);
+
     // Fast path for undefined/null values
     if (value === undefined) {
       return isOptional
@@ -961,15 +964,34 @@ export class InterfaceSchema<T = any> {
           };
     }
 
+    // Check for null when required (! syntax)
     if (value === null) {
-      return isOptional
-        ? { success: true, errors: [], warnings: [], data: null }
-        : {
-            success: false,
-            errors: [ErrorHandler.createTypeError([], "null", value)],
-            warnings: [],
-            data: value,
-          };
+      if (isRequired) {
+        // Required fields marked with ! cannot be null
+        return {
+          success: false,
+          errors: [
+            ErrorHandler.createValidationError(
+              [],
+              `Required field cannot be null or undefined`,
+              value
+            ),
+          ],
+          warnings: [],
+          data: value,
+        };
+      } else if (isOptional) {
+        // Optional fields can be null
+        return { success: true, errors: [], warnings: [], data: null };
+      } else {
+        // Regular fields (not optional, not required with !) cannot be null
+        return {
+          success: false,
+          errors: [ErrorHandler.createTypeError([], "null", value)],
+          warnings: [],
+          data: value,
+        };
+      }
     }
 
     // Secure regex pattern to check for array type
