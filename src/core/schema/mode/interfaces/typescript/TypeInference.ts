@@ -59,48 +59,68 @@ export type CoreTypeMap = {
 };
 
 /**
+ * Strip custom error message helper (handles both "type --> msg" and "type--> msg")
+ */
+type StripCustomError<T extends string> =
+  T extends `${infer Base} --> ${string}`
+    ? Base
+    : T extends `${infer Base}--> ${string}`
+      ? Base
+      : T extends `${infer Base}-->${string}`
+        ? Base
+        : T;
+
+/**
  * Extract base type from field type string (removes constraints and modifiers)
  */
 export type ExtractBaseType<T extends string> =
   // First strip custom error message if present
-  T extends `${infer Base} --> ${string}`
-    ? ExtractBaseType<Base>
-    : T extends `${infer Base}(${string})`
-      ? Base
-      : T extends `${infer Base}?`
+  StripCustomError<T> extends infer Stripped
+    ? Stripped extends T
+      ? // No custom error message, continue with normal extraction
+        T extends `${infer Base}(${string})`
         ? Base
-        : T extends `${infer Base}[]`
+        : T extends `${infer Base}?`
           ? Base
-          : T extends `${infer Base}[]?`
+          : T extends `${infer Base}[]`
             ? Base
-            : T extends `${infer Base}!`
+            : T extends `${infer Base}[]?`
               ? Base
-              : // Handle parentheses around union types like "(web | test | ok)?"
-                T extends `(${infer Content})?`
-                ? Content
-                : T extends `(${infer Content})`
+              : T extends `${infer Base}!`
+                ? Base
+                : // Handle parentheses around union types like "(web | test | ok)?"
+                  T extends `(${infer Content})?`
                   ? Content
-                  : T;
+                  : T extends `(${infer Content})`
+                    ? Content
+                    : T
+      : // Custom error message was stripped, recurse with the base
+        ExtractBaseType<Stripped & string>
+    : T;
 
 /**
  * Check if field type is optional
  */
 export type IsOptional<T extends string> = 
-  T extends `${infer Base} --> ${string}`
-    ? IsOptional<Base>
-    : T extends `${string}?`
-      ? true
-      : false;
+  StripCustomError<T> extends infer Stripped
+    ? Stripped extends string
+      ? Stripped extends `${string}?`
+        ? true
+        : false
+      : false
+    : false;
 
 /**
  * Check if field type is required (non-empty/non-zero)
  */
 export type IsRequired<T extends string> = 
-  T extends `${infer Base} --> ${string}`
-    ? IsRequired<Base>
-    : T extends `${string}!`
-      ? true
-      : false;
+  StripCustomError<T> extends infer Stripped
+    ? Stripped extends string
+      ? Stripped extends `${string}!`
+        ? true
+        : false
+      : false
+    : false;
 
 /**
  * Check if field type is an array
