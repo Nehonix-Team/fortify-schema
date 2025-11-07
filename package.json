@@ -1,6 +1,6 @@
 {
   "name": "fortify-schema",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A modern TypeScript validation library designed around familiar interface syntax and powerful conditional validation. Experience schema validation that feels natural to TypeScript developers while unlocking advanced runtime validation capabilities.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
