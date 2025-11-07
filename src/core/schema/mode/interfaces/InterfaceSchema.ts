@@ -154,6 +154,9 @@ export class InterfaceSchema<T = any> {
     // CRITICAL FIX: Also check for nested conditional fields
     const hasNestedConditionalFields = this.hasNestedConditionalFields();
 
+    // CRITICAL FIX: Check for nested required fields (! syntax)
+    const hasNestedRequiredFields = this.hasNestedRequiredFields();
+
     // CRITICAL FIX: Check for array-of-objects fields (precompiler doesn't handle them)
     // Also check for OptionalNestedObject wrappers that contain arrays
     const hasArrayOfObjects = this.compiledFields.some(
@@ -163,11 +166,18 @@ export class InterfaceSchema<T = any> {
          Array.isArray(field.originalType.schema))
     );
 
-    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, or array-of-objects
+    // Check for required fields (! syntax) - precompiler doesn't handle them properly
+    const hasRequiredFieldsPrecompile = this.compiledFields.some(
+      (field) => field.parsedConstraints?.required === true
+    );
+
+    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, array-of-objects, or required fields
     if (
       !hasConditionalFields &&
       !hasNestedConditionalFields &&
+      !hasNestedRequiredFields &&
       !hasArrayOfObjects &&
+      !hasRequiredFieldsPrecompile &&
       !this.options.loose &&
       maxNestingDepth <= 3
     ) {
@@ -200,6 +210,35 @@ export class InterfaceSchema<T = any> {
             return true;
           }
           // Note: Precompilation issues have been fixed for double, positive, negative, and regex patterns
+        } else if (
+          typeof value === "object" &&
+          value !== null &&
+          !Array.isArray(value)
+        ) {
+          // Recursively check nested objects
+          if (checkObject(value)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    return checkObject(this.definition);
+  }
+
+  /**
+   * Check if schema has nested required fields (! syntax)
+   * CRITICAL FIX: This prevents precompilation for schemas with nested required fields
+   */
+  private hasNestedRequiredFields(): boolean {
+    const checkObject = (obj: any): boolean => {
+      for (const [key, value] of Object.entries(obj)) {
+        if (typeof value === "string") {
+          // Check if this field has ! syntax
+          if (value.endsWith("!")) {
+            return true;
+          }
         } else if (
           typeof value === "object" &&
           value !== null &&
@@ -611,6 +650,24 @@ export class InterfaceSchema<T = any> {
     }
 
     if (value === null) {
+      // If field has ! syntax (isRequired), reject null
+      if (isRequired) {
+        return {
+          success: false,
+          errors: [
+            ErrorHandler.createValidationError(
+              [],
+              "Required field cannot be null",
+              value
+            ),
+          ],
+          warnings: [],
+          data: value,
+        };
+      }
+      
+      // If field has ? syntax (isOptional), allow null
+      // Otherwise (default), also allow null
       return isOptional
         ? { success: true, errors: [], warnings: [], data: null }
         : {
@@ -935,9 +992,6 @@ export class InterfaceSchema<T = any> {
       required: isRequired,
     } = ConstraintParser.parseConstraints(fieldType);
 
-    // console.log(`Parsed: type=${parsedType}, required=${isRequired}, optional=${isOptional}`);
-    console.log(`Parsed: type=${parsedType}, required=${isRequired}, optional=${isOptional}`);
-
     // Fast path for undefined/null values
     if (value === undefined) {
       return isOptional
@@ -964,34 +1018,33 @@ export class InterfaceSchema<T = any> {
           };
     }
 
-    // Check for null when required (! syntax)
     if (value === null) {
+      // If field has ! syntax (isRequired), reject null
       if (isRequired) {
-        // Required fields marked with ! cannot be null
         return {
           success: false,
           errors: [
             ErrorHandler.createValidationError(
               [],
-              `Required field cannot be null or undefined`,
+              "Required field cannot be null",
               value
             ),
           ],
           warnings: [],
           data: value,
         };
-      } else if (isOptional) {
-        // Optional fields can be null
-        return { success: true, errors: [], warnings: [], data: null };
-      } else {
-        // Regular fields (not optional, not required with !) cannot be null
-        return {
-          success: false,
-          errors: [ErrorHandler.createTypeError([], "null", value)],
-          warnings: [],
-          data: value,
-        };
       }
+      
+      // If field has ? syntax (isOptional), allow null
+      // Otherwise (default), also allow null
+      return isOptional
+        ? { success: true, errors: [], warnings: [], data: null }
+        : {
+            success: false,
+            errors: [ErrorHandler.createTypeError([], "null", value)],
+            warnings: [],
+            data: value,
+          };
     }
 
     // Secure regex pattern to check for array type
