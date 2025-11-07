@@ -2,7 +2,7 @@
   "name": "fortify-schema-vscode",
   "displayName": "Fortify Schema",
   "description": "VSCode extension for Fortify Schema - The Future of TypeScript Validation",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "publisher": "NEHONIX",
   "icon": "public/assets/ms-icon-144x144.png",
   "engines": {

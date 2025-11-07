@@ -828,7 +828,7 @@ export class InterfaceSchema<T = any> {
     // Handle union types using secure regex
     const unionPattern = /\|/;
     if (unionPattern.test(type)) {
-      return ValidationHelpers.validateUnionType(type, value);
+      return ValidationHelpers.validateUnionType(type, value, customErrorMessage);
     }
 
     // Handle basic types using pre-parsed constraints

@@ -359,7 +359,13 @@ class FortifyDiagnosticsProvider {
      * @returns Array of diagnostics
      */
     validateSchemaString(schema, range) {
-        const trimmedSchema = schema.trim();
+        let trimmedSchema = schema.trim();
+        // Strip custom error message if present (syntax: "type --> custom message")
+        const customErrorPattern = /^(.+?)\s*-->\s*.+$/;
+        const customErrorMatch = trimmedSchema.match(customErrorPattern);
+        if (customErrorMatch) {
+            trimmedSchema = customErrorMatch[1].trim();
+        }
         if (trimmedSchema.includes("when")) {
             return this.validateConditionalSchema(trimmedSchema, range);
         }

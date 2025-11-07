@@ -62,36 +62,45 @@ export type CoreTypeMap = {
  * Extract base type from field type string (removes constraints and modifiers)
  */
 export type ExtractBaseType<T extends string> =
-  T extends `${infer Base}(${string})`
-    ? Base
-    : T extends `${infer Base}?`
+  // First strip custom error message if present
+  T extends `${infer Base} --> ${string}`
+    ? ExtractBaseType<Base>
+    : T extends `${infer Base}(${string})`
       ? Base
-      : T extends `${infer Base}[]`
+      : T extends `${infer Base}?`
         ? Base
-        : T extends `${infer Base}[]?`
+        : T extends `${infer Base}[]`
           ? Base
-          : T extends `${infer Base}!`
+          : T extends `${infer Base}[]?`
             ? Base
-            : // Handle parentheses around union types like "(web | test | ok)?"
-              T extends `(${infer Content})?`
-              ? Content
-              : T extends `(${infer Content})`
+            : T extends `${infer Base}!`
+              ? Base
+              : // Handle parentheses around union types like "(web | test | ok)?"
+                T extends `(${infer Content})?`
                 ? Content
-                : T;
+                : T extends `(${infer Content})`
+                  ? Content
+                  : T;
 
 /**
  * Check if field type is optional
  */
-export type IsOptional<T extends string> = T extends `${string}?`
-  ? true
-  : false;
+export type IsOptional<T extends string> = 
+  T extends `${infer Base} --> ${string}`
+    ? IsOptional<Base>
+    : T extends `${string}?`
+      ? true
+      : false;
 
 /**
  * Check if field type is required (non-empty/non-zero)
  */
-export type IsRequired<T extends string> = T extends `${string}!`
-  ? true
-  : false;
+export type IsRequired<T extends string> = 
+  T extends `${infer Base} --> ${string}`
+    ? IsRequired<Base>
+    : T extends `${string}!`
+      ? true
+      : false;
 
 /**
  * Check if field type is an array

@@ -183,10 +183,14 @@ export class ValidationHelpers {
    */
   static validateUnionType(
     unionType: string,
-    value: any
+    value: any,
+    customErrorMessage?: string
   ): SchemaValidationResult {
     if (!unionType || typeof unionType !== "string") {
-      return this.createErrorResult("Invalid union type definition", value);
+      return this.createErrorResult(
+        customErrorMessage || "Invalid union type definition",
+        value
+      );
     }
 
     try {
@@ -216,7 +220,8 @@ export class ValidationHelpers {
 
         // None of the types matched
         return this.createErrorResult(
-          `Expected one of types: ${unionParts.join(", ")}, got ${typeof value}`,
+          customErrorMessage ||
+            `Expected one of types: ${unionParts.join(", ")}, got ${typeof value}`,
           value
         );
       } else {
@@ -225,7 +230,8 @@ export class ValidationHelpers {
 
         if (!result.isValid) {
           return this.createErrorResult(
-            result.error ||
+            customErrorMessage ||
+              result.error ||
               `Expected one of: ${unionParts.join(", ")}, got ${value}`,
             value
           );
@@ -235,7 +241,8 @@ export class ValidationHelpers {
       }
     } catch (error) {
       return this.createErrorResult(
-        `Union type validation error: ${error instanceof Error ? error.message : "Unknown error"}`,
+        customErrorMessage ||
+          `Union type validation error: ${error instanceof Error ? error.message : "Unknown error"}`,
         value
       );
     }
