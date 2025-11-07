@@ -92,8 +92,32 @@ const result = UserSchema.safeParse(userData);
   age: "int(18,120)",      // Integer with range
   email: "email",          // Email validation
   optional: "string?",     // Optional field
+  required: "string!",     // Required (non-null, non-empty)
   tags: "string[]",        // Array type
   status: "active|inactive" // Union type
+}
+```
+
+### Custom Error Messages
+
+Define custom error messages for better user experience:
+
+```typescript
+{
+  // Basic custom message
+  name: "string --> Please provide a valid name",
+  
+  // With constraints
+  age: "number(18,100) --> Age must be between 18 and 100",
+  
+  // With required marker
+  email: "email! --> Please provide a valid email address",
+  
+  // With optional marker
+  phone: "string? --> Phone number must be a string if provided",
+  
+  // Complex validation
+  username: "string(3,20)! --> Username must be 3-20 characters and cannot be empty"
 }
 ```
 
