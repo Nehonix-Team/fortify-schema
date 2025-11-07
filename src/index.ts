@@ -2,7 +2,7 @@
  *  Fortify Schema - TypeScript Interface-like Schema Validation
  *
  * @file index.ts
- *
+ * 
  * @author Nehonix
  * @license MIT
  *

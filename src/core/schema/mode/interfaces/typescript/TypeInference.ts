@@ -196,15 +196,17 @@ export type InferFieldType<T> = T extends string
           ? U[number]
           : T extends OptionalSchemaInterface
             ? InferSchemaType<T["schema"]> | undefined
-            : T extends Array<infer U>
+            : T extends readonly [infer U]
               ? Array<InferSchemaType<U>>
-              : T extends object
-                ? InferSchemaType<T>
-                : any;
+              : T extends Array<infer U>
+                ? Array<InferSchemaType<U>>
+                : T extends object
+                  ? InferSchemaType<T>
+                  : any;
 
 /**
  * Main type inference for schema interfaces
- * FIXED: Handle optional properties correctly in nested objects
+ * FIXED: Handle optional properties correctly in nested objects 
  */
 export type InferSchemaType<T> = {
   // Required properties (non-optional)

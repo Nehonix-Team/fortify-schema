@@ -154,10 +154,16 @@ export class InterfaceSchema<T = any> {
     // CRITICAL FIX: Also check for nested conditional fields
     const hasNestedConditionalFields = this.hasNestedConditionalFields();
 
-    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, or nested conditionals
+    // CRITICAL FIX: Check for array-of-objects fields (precompiler doesn't handle them)
+    const hasArrayOfObjects = this.compiledFields.some(
+      (field) => Array.isArray(field.originalType)
+    );
+
+    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, or array-of-objects
     if (
       !hasConditionalFields &&
       !hasNestedConditionalFields &&
+      !hasArrayOfObjects &&
       !this.options.loose &&
       maxNestingDepth <= 3
     ) {
