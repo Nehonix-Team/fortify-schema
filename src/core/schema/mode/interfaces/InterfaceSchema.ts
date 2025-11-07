@@ -691,7 +691,7 @@ export class InterfaceSchema<T = any> {
           errors: [
             ErrorHandler.createValidationError(
               [],
-              "Required field cannot be null",
+              customErrorMessage || "Required field cannot be null",
               value
             ),
           ],
@@ -706,7 +706,11 @@ export class InterfaceSchema<T = any> {
         ? { success: true, errors: [], warnings: [], data: null }
         : {
             success: false,
-            errors: [ErrorHandler.createTypeError([], "null", value)],
+            errors: [
+              customErrorMessage
+                ? ErrorHandler.createValidationError([], customErrorMessage, value)
+                : ErrorHandler.createTypeError([], "null", value)
+            ],
             warnings: [],
             data: value,
           };
@@ -1025,6 +1029,7 @@ export class InterfaceSchema<T = any> {
       constraints,
       optional: isOptional,
       required: isRequired,
+      customErrorMessage,
     } = ConstraintParser.parseConstraints(fieldType);
 
     // Fast path for undefined/null values
@@ -1061,7 +1066,7 @@ export class InterfaceSchema<T = any> {
           errors: [
             ErrorHandler.createValidationError(
               [],
-              "Required field cannot be null",
+              customErrorMessage || "Required field cannot be null",
               value
             ),
           ],
@@ -1076,7 +1081,11 @@ export class InterfaceSchema<T = any> {
         ? { success: true, errors: [], warnings: [], data: null }
         : {
             success: false,
-            errors: [ErrorHandler.createTypeError([], "null", value)],
+            errors: [
+              customErrorMessage
+                ? ErrorHandler.createValidationError([], customErrorMessage, value)
+                : ErrorHandler.createTypeError([], "null", value)
+            ],
             warnings: [],
             data: value,
           };

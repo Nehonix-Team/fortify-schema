@@ -83,19 +83,24 @@ export class TypeValidators {
     result: SchemaValidationResult,
     value: number,
     constraints: any,
-    typeLabel: string = "Number"
+    typeLabel: string = "Number",
+    customErrorMessage?: string
   ): void {
     if (constraints.min !== undefined && value < constraints.min) {
       this.addError(
         result,
-        ErrorHandler.createNumberError([], "minimum", value)
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createNumberError([], "minimum", value)
       );
     }
 
     if (constraints.max !== undefined && value > constraints.max) {
       this.addError(
         result,
-        ErrorHandler.createNumberError([], "maximum", value)
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createNumberError([], "maximum", value)
       );
     }
   }
@@ -318,7 +323,8 @@ export class TypeValidators {
     value: any,
     options: SchemaOptions,
     constraints: any,
-    required: boolean = false
+    required: boolean = false,
+    customErrorMessage?: string
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
 
@@ -328,7 +334,7 @@ export class TypeValidators {
         result,
         ErrorHandler.createValidationError(
           [],
-          `Required field cannot be null or undefined`,
+          customErrorMessage || `Required field cannot be null or undefined`,
           value
         )
       );
@@ -346,13 +352,20 @@ export class TypeValidators {
       ) {
         this.addError(
           result,
-          ErrorHandler.createTypeError([], "number", value)
+          customErrorMessage
+            ? ErrorHandler.createValidationError([], customErrorMessage, value)
+            : ErrorHandler.createTypeError([], "number", value)
         );
         return result;
       }
       value = result.data;
     } else if (!this.isValidNumber(value)) {
-      this.addError(result, ErrorHandler.createTypeError([], "number", value));
+      this.addError(
+        result,
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createTypeError([], "number", value)
+      );
       return result;
     }
 
@@ -360,12 +373,16 @@ export class TypeValidators {
     if (constraints.type === "positive" && value <= 0) {
       this.addError(
         result,
-        ErrorHandler.createNumberError([], "positive", value)
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createNumberError([], "positive", value)
       );
     } else if (constraints.type === "negative" && value >= 0) {
       this.addError(
         result,
-        ErrorHandler.createNumberError([], "negative", value)
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createNumberError([], "negative", value)
       );
     }
 
@@ -374,7 +391,7 @@ export class TypeValidators {
       this.validateRequired(result, value, "number");
     }
 
-    this.validateNumberConstraints(result, value, constraints);
+    this.validateNumberConstraints(result, value, constraints, "Number", customErrorMessage);
     return result;
   }
 

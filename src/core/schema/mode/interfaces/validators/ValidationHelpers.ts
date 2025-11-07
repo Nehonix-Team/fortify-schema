@@ -726,7 +726,8 @@ export class ValidationHelpers {
           value,
           options,
           constraints,
-          required
+          required,
+          customErrorMessage
         );
 
       case VALIDATOR_TYPES.INT:
