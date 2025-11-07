@@ -52,7 +52,7 @@
  * const PartialUserSchema = Mod.partial(UserSchema);
  *
  * const result = UserSchema.safeParse(userData);
- * ```
+ * ``` 
  *
  * @example Traditional Fluent API
  * ```typescript

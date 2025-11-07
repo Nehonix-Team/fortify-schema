@@ -298,7 +298,14 @@ export class Mod {
         const fieldType = newDefinition[keyStr];
         if (typeof fieldType === "string" && !fieldType.endsWith("?")) {
           newDefinition[keyStr] = fieldType + "?";
-        } else if (typeof fieldType === "object") {
+        } else if (Array.isArray(fieldType)) {
+          // For arrays (including array-of-objects), mark as optional by wrapping
+          // The validation system needs to check for undefined before validating array elements
+          newDefinition[keyStr] = {
+            schema: fieldType,
+            optional: true,
+          } as OptionalNestedObject;
+        } else if (typeof fieldType === "object" && fieldType !== null) {
           // For nested objects, we need to wrap them in an optional schema interface
           // This tells the validation system that the entire nested object is optional
           newDefinition[keyStr] = {

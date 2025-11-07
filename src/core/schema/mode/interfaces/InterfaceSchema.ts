@@ -155,8 +155,12 @@ export class InterfaceSchema<T = any> {
     const hasNestedConditionalFields = this.hasNestedConditionalFields();
 
     // CRITICAL FIX: Check for array-of-objects fields (precompiler doesn't handle them)
+    // Also check for OptionalNestedObject wrappers that contain arrays
     const hasArrayOfObjects = this.compiledFields.some(
-      (field) => Array.isArray(field.originalType)
+      (field) => 
+        Array.isArray(field.originalType) ||
+        (TypeGuards.isOptionalSchemaInterface(field.originalType) && 
+         Array.isArray(field.originalType.schema))
     );
 
     // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, or array-of-objects
@@ -270,7 +274,11 @@ export class InterfaceSchema<T = any> {
         isConditional: false,
       };
 
-      if (typeof fieldType === "string") {
+      // Check for OptionalNestedObject wrapper (from Mod.makeOptional)
+      if (TypeGuards.isOptionalSchemaInterface(fieldType)) {
+        compiled.isOptional = true;
+        // Keep the wrapped type as originalType so validateField can handle it
+      } else if (typeof fieldType === "string") {
         // Check for conditional syntax (when ... *? ... : ...)
         if (this.isConditionalSyntax(fieldType)) {
           compiled.isConditional = true;
@@ -799,8 +807,16 @@ export class InterfaceSchema<T = any> {
       // console.log("validating optional schema interface");
       if (value === undefined) {
         result.data = this.options.default;
-        return result;
+        return result; 
       }
+      
+      // Check if the wrapped schema is an array
+      if (Array.isArray(fieldType.schema)) {
+        // Validate as array-of-objects
+        return this.validateField(_key, fieldType.schema, value, fullData);
+      }
+      
+      // Otherwise validate as nested object
       const nestedSchema = new InterfaceSchema(fieldType.schema, this.options);
       return nestedSchema.validate(value);
     }
