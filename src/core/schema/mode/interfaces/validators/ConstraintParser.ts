@@ -143,6 +143,7 @@ export class ConstraintParser {
       constraints: {},
       optional: obj.optional,
       required: obj.required,
+      customErrorMessage: obj.customErrorMessage,
     };
 
     // Deep clone constraints object
@@ -171,9 +172,24 @@ export class ConstraintParser {
     let required = false;
     let type = this._sanitizeInput(fieldType);
     let constraints: any = {};
+    let customErrorMessage: string | undefined;
 
     if (!type) {
       throw new Error("Field type cannot be empty after sanitization");
+    }
+
+    // Parse custom error message (format: "type --> message")
+    const errorMessageMatch = type.match(/^(.+?)\s*-->\s*(.+)$/);
+    if (errorMessageMatch) {
+      type = errorMessageMatch[1].trim();
+      customErrorMessage = errorMessageMatch[2].trim();
+      
+      if (!type) {
+        throw new Error('Invalid field type: type cannot be empty before "-->"');
+      }
+      if (!customErrorMessage) {
+        throw new Error('Invalid field type: custom error message cannot be empty after "-->"');
+      }
     }
 
     // Enhanced optional marker detection
@@ -198,7 +214,7 @@ export class ConstraintParser {
 
     // Enhanced union type detection
     if (this._isUnionTypeInParentheses(type)) {
-      return { type, constraints: {}, optional, required };
+      return { type, constraints: {}, optional, required, customErrorMessage };
     }
 
     // Enhanced constraint parsing with robust validation
@@ -220,7 +236,7 @@ export class ConstraintParser {
 
     // Check for conditional expressions (when ... *? ... : ...)
     if (this._isConditionalExpression(type)) {
-      return { type, constraints: {}, optional, required };
+      return { type, constraints: {}, optional, required, customErrorMessage };
     }
 
     // Enhanced base type validation
@@ -228,7 +244,7 @@ export class ConstraintParser {
       throw new Error(`Invalid base type: "${type}"`);
     }
 
-    return { type, constraints, optional, required };
+    return { type, constraints, optional, required, customErrorMessage };
   }
 
   /**

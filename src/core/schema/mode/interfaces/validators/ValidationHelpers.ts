@@ -617,7 +617,8 @@ export class ValidationHelpers {
     value: any,
     options: SchemaOptions,
     constraints: any,
-    required: boolean = false
+    required: boolean = false,
+    customErrorMessage?: string
   ): SchemaValidationResult {
     // Debug logging
 
@@ -715,7 +716,8 @@ export class ValidationHelpers {
           value,
           options,
           constraints,
-          required
+          required,
+          customErrorMessage
         );
 
       case VALIDATOR_TYPES.NUMBER:

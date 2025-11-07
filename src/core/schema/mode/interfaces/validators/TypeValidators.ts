@@ -274,7 +274,8 @@ export class TypeValidators {
     value: any,
     options: SchemaOptions,
     constraints: any,
-    required: boolean = false
+    required: boolean = false,
+    customErrorMessage?: string
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
 
@@ -284,7 +285,7 @@ export class TypeValidators {
         result,
         ErrorHandler.createValidationError(
           [],
-          `Required field cannot be null or undefined`,
+          customErrorMessage || `Required field cannot be null or undefined`,
           value
         )
       );
@@ -292,7 +293,12 @@ export class TypeValidators {
     }
 
     if (typeof value !== "string") {
-      this.addError(result, ErrorHandler.createTypeError([], "string", value));
+      this.addError(
+        result,
+        customErrorMessage
+          ? ErrorHandler.createValidationError([], customErrorMessage, value)
+          : ErrorHandler.createTypeError([], "string", value)
+      );
       return result;
     }
 

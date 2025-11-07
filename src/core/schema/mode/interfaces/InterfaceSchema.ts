@@ -157,6 +157,9 @@ export class InterfaceSchema<T = any> {
     // CRITICAL FIX: Check for nested required fields (! syntax)
     const hasNestedRequiredFields = this.hasNestedRequiredFields();
 
+    // CRITICAL FIX: Check for custom error messages (-->) - precompiler doesn't handle them
+    const hasCustomErrorMessages = this.hasCustomErrorMessages();
+
     // CRITICAL FIX: Check for array-of-objects fields (precompiler doesn't handle them)
     // Also check for OptionalNestedObject wrappers that contain arrays
     const hasArrayOfObjects = this.compiledFields.some(
@@ -171,11 +174,12 @@ export class InterfaceSchema<T = any> {
       (field) => field.parsedConstraints?.required === true
     );
 
-    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, array-of-objects, or required fields
+    // Skip precompilation if loose mode is enabled (needs type coercion support), deep nesting, nested conditionals, array-of-objects, required fields, or custom error messages
     if (
       !hasConditionalFields &&
       !hasNestedConditionalFields &&
       !hasNestedRequiredFields &&
+      !hasCustomErrorMessages &&
       !hasArrayOfObjects &&
       !hasRequiredFieldsPrecompile &&
       !this.options.loose &&
@@ -237,6 +241,35 @@ export class InterfaceSchema<T = any> {
         if (typeof value === "string") {
           // Check if this field has ! syntax
           if (value.endsWith("!")) {
+            return true;
+          }
+        } else if (
+          typeof value === "object" &&
+          value !== null &&
+          !Array.isArray(value)
+        ) {
+          // Recursively check nested objects
+          if (checkObject(value)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    return checkObject(this.definition);
+  }
+
+  /**
+   * Check if schema has custom error messages (-->  syntax)
+   * CRITICAL FIX: This prevents precompilation for schemas with custom error messages
+   */
+  private hasCustomErrorMessages(): boolean {
+    const checkObject = (obj: any): boolean => {
+      for (const [key, value] of Object.entries(obj)) {
+        if (typeof value === "string") {
+          // Check if this field has --> syntax
+          if (value.includes("-->")) {
             return true;
           }
         } else if (
@@ -630,6 +663,7 @@ export class InterfaceSchema<T = any> {
       constraints,
       optional: isOptional,
       required: isRequired,
+      customErrorMessage,
     } = parsedConstraints!;
 
     // Fast path for undefined/null values
@@ -799,7 +833,8 @@ export class InterfaceSchema<T = any> {
       value,
       { ...constraints, ...this.options },
       constraints,
-      isRequired // FIXED: Pass the required parameter
+      isRequired, // FIXED: Pass the required parameter
+      customErrorMessage // Pass custom error message
     );
   }
 
@@ -1181,11 +1216,12 @@ export class InterfaceSchema<T = any> {
       return ValidationHelpers.validateUnionType(fieldType, value);
     }
 
-    // Parse constraints from field type (include required field)
+    // Parse constraints from field type (include required field and custom error message)
     const {
       type,
       constraints,
       required: fieldIsRequired,
+      customErrorMessage,
     } = ConstraintParser.parseConstraints(fieldType);
 
     // Apply parsed constraints to options, but preserve important options like loose
@@ -1214,7 +1250,8 @@ export class InterfaceSchema<T = any> {
       value,
       Options,
       constraints,
-      fieldIsRequired // Use the required field from constraint parsing
+      fieldIsRequired, // Use the required field from constraint parsing
+      customErrorMessage // Pass custom error message
     );
 
     return result;
