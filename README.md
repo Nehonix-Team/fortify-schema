@@ -20,6 +20,7 @@ A modern TypeScript validation library designed around familiar interface syntax
 
 ## 🆕 What's New
 
+- **Custom Error Messages (`-->`)**: Define user-friendly error messages with `"type --> Your custom message"`
 - **Required Fields (`!`)**: Enforce non-empty strings and non-zero numbers with `"string!"` and `"number!"`
 - **Object Types**: Validate generic object structures with `"object"` and `"object?"`
 - **Enhanced Security**: All string operations now use secure regex patterns instead of potentially vulnerable methods
@@ -38,10 +39,10 @@ import { Interface } from "fortify-schema";
 // Define schemas with familiar TypeScript-like syntax
 const UserSchema = Interface({
   id: "uuid",
-  email: "email", 
-  name: "string(2,50)", 
-  age: "number(18,120)?",
-  role: "admin|user|guest",
+  email: "email! --> Please provide a valid email address", 
+  name: "string(2,50) --> Name must be between 2 and 50 characters", 
+  age: "number(18,120)? --> Age must be between 18 and 120",
+  role: "admin|user|guest --> Role must be admin, user, or guest",
 
   // 🆕 Object and array types
   profile: "object", // Any object structure
@@ -59,6 +60,7 @@ if (result.success) {
   console.log("Valid user:", result.data); // Fully typed!
 } else {
   console.log("Validation errors:", result.errors);
+  // Custom error messages appear in validation errors!
 }
 ```
 
