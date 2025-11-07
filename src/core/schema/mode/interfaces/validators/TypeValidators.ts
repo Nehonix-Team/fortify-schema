@@ -278,6 +278,19 @@ export class TypeValidators {
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
 
+    // Check for null/undefined when required (! syntax)
+    if (required && (value === null || value === undefined)) {
+      this.addError(
+        result,
+        ErrorHandler.createValidationError(
+          [],
+          `Required field cannot be null or undefined`,
+          value
+        )
+      );
+      return result;
+    }
+
     if (typeof value !== "string") {
       this.addError(result, ErrorHandler.createTypeError([], "string", value));
       return result;
@@ -302,6 +315,19 @@ export class TypeValidators {
     required: boolean = false
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
+
+    // Check for null/undefined when required (! syntax)
+    if (required && (value === null || value === undefined)) {
+      this.addError(
+        result,
+        ErrorHandler.createValidationError(
+          [],
+          `Required field cannot be null or undefined`,
+          value
+        )
+      );
+      return result;
+    }
 
     if (typeof value === "string" && options.loose) {
       if (
@@ -406,9 +432,23 @@ export class TypeValidators {
     value: any,
     options: SchemaOptions,
     constraints: any,
-    type: "float" | "double"
+    type: "float" | "double",
+    required: boolean = false
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
+
+    // Check for null/undefined when required (! syntax)
+    if (required && (value === null || value === undefined)) {
+      this.addError(
+        result,
+        ErrorHandler.createValidationError(
+          [],
+          `Required field cannot be null or undefined`,
+          value
+        )
+      );
+      return result;
+    }
 
     if (typeof value === "string" && options.loose) {
       if (
@@ -438,9 +478,23 @@ export class TypeValidators {
   static validateBoolean(
     value: any,
     options: SchemaOptions,
-    constraints: any
+    constraints: any,
+    required: boolean = false
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
+
+    // Check for null/undefined when required (! syntax)
+    if (required && (value === null || value === undefined)) {
+      this.addError(
+        result,
+        ErrorHandler.createValidationError(
+          [],
+          `Required field cannot be null or undefined`,
+          value
+        )
+      );
+      return result;
+    }
 
     if (typeof value === "boolean") {
       result.data = value;
@@ -465,9 +519,23 @@ export class TypeValidators {
     value: any,
     options: SchemaOptions,
     constraints: any,
-    type: "date" | "datetime" | "timestamp"
+    type: "date" | "datetime" | "timestamp",
+    required: boolean = false
   ): SchemaValidationResult {
     const result = this.createResult(true, value);
+
+    // Check for null/undefined when required (! syntax)
+    if (required && (value === null || value === undefined)) {
+      this.addError(
+        result,
+        ErrorHandler.createValidationError(
+          [],
+          `Required field cannot be null or undefined`,
+          value
+        )
+      );
+      return result;
+    }
 
     if (value instanceof Date) {
       if (isNaN(value.getTime())) {

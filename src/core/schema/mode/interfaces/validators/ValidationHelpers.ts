@@ -757,7 +757,7 @@ export class ValidationHelpers {
 
       case VALIDATOR_TYPES.BOOLEAN:
       case VALIDATOR_TYPES.BOOL:
-        return TypeValidators.validateBoolean(value, options, constraints);
+        return TypeValidators.validateBoolean(value, options, constraints, required);
 
       case VALIDATOR_TYPES.DATE:
       case VALIDATOR_TYPES.DATETIME:
@@ -766,7 +766,8 @@ export class ValidationHelpers {
           value,
           options,
           constraints,
-          type as "date" | "datetime" | "timestamp"
+          type as "date" | "datetime" | "timestamp",
+          required
         );
 
       case VALIDATOR_TYPES.EMAIL:
