@@ -136,6 +136,9 @@
           "include": "#fortify-conditional-syntax"
         },
         {
+          "include": "#fortify-custom-error-message"
+        },
+        {
           "include": "#fortify-basic-types"
         },
         {
@@ -531,11 +534,31 @@
         }
       ]
     },
+    "fortify-custom-error-message": {
+      "patterns": [
+        {
+          "name": "meta.custom-error.fortify",
+          "match": "(-->)\\s*(.+?)(?=\\s*[\"'`]|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.fortify.custom-error-arrow"
+            },
+            "2": {
+              "name": "string.unquoted.fortify.custom-error-message"
+            }
+          }
+        }
+      ]
+    },
     "fortify-optional": {
       "patterns": [
         {
           "name": "punctuation.definition.fortify.optional",
           "match": "\\?"
+        },
+        {
+          "name": "punctuation.definition.fortify.required",
+          "match": "!"
         }
       ]
     },
