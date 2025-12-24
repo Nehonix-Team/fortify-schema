@@ -1,6 +1,6 @@
 /**
  * Automaticly publish ext to sdk.
- * Src: https://sdk.nehonix.space/sdks/pkgs/mods/vscode/['version' or 'latest']/fortify-schema.vsix
+ * Src: https://dll.nehonix.com/sdks/pkgs/mods/vscode/['version' or 'latest']/fortify-schema.vsix
  * VFile: fortify-schema-vscode-0.1.0.vsix
  */
 

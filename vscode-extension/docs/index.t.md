@@ -2,8 +2,8 @@
 
 Fortify Schema is a TypeScript-first validation library designed around familiar interface syntax and powerful conditional validation. This reference documentation provides a comprehensive guide to all available types, modifiers, constraints, utility functions, union types, and conditional logic supported by Fortify Schema.
 
-_Powered by [Nehonix](https://nehonix.space) - Empowering developers since 2025._
-_See full documentation on [GitHub](https://github.com/Nehonix-Team/fortify-schema) or via [lab.nehonix.space](https://lab.nehonix.space)_
+_Powered by [Nehonix](https://nehonix.com) - Empowering developers since 2025._
+_See full documentation on [GitHub](https://github.com/Nehonix-Team/fortify-schema) or via [lab.nehonix.com](https://lab.nehonix.com)_
 
 ## 🆕 Latest Features
 

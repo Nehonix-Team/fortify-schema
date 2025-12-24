@@ -4,12 +4,12 @@
 
 We are committed to maintaining the security of Fortify Schema. The following versions are currently supported with security updates:
 
-| Version | Supported          | Status        |
-| ------- | ------------------ | ------------- |
+| Version | Supported          | Status                 |
+| ------- | ------------------ | ---------------------- |
 | 2.1.x   | :white_check_mark: | Current stable (2.1.2) |
-| 2.0.x   | :white_check_mark: | LTS support   |
-| 1.x.x   | :x:                | End of life   |
-| < 1.0   | :x:                | End of life   |
+| 2.0.x   | :white_check_mark: | LTS support            |
+| 1.x.x   | :x:                | End of life            |
+| < 1.0   | :x:                | End of life            |
 
 **Note**: As Fortify Schema is actively developed, we maintain support for the current minor version series (2.1.x) and the most recent major version (2.0.x) for long-term support. The current stable release is **2.1.2**.
 
@@ -53,12 +53,14 @@ Please include the following information in your report:
 ### What to Expect
 
 **If the vulnerability is accepted:**
+
 - We will acknowledge the issue and provide a timeline for resolution
 - We will work on a fix and coordinate disclosure with you
 - Credit will be given to the reporter (unless anonymity is requested)
 - A security advisory will be published after the fix is released
 
 **If the vulnerability is declined:**
+
 - We will provide a clear explanation of why the issue doesn't qualify as a security vulnerability
 - We may suggest alternative approaches or clarifications
 - You are welcome to discuss the decision or provide additional information
@@ -86,7 +88,7 @@ We follow responsible disclosure practices:
 
 For security-related questions or concerns:
 
-- **Security Team**: `support@nehonix.space`
+- **Security Team**: `support@nehonix.com`
 - **General Issues**: [GitHub Issues](https://github.com/Nehonix-Team/fortify-schema/issues)
 - **Community Discussion**: [GitHub Discussions](https://github.com/Nehonix-Team/fortify-schema/discussions)
 

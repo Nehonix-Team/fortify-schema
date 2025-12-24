@@ -17,7 +17,7 @@ if ($content -notmatch "fortify") {
 Write-Host "Found Fortify settings. Running cleanup..." -ForegroundColor Yellow
 
 # Download and run the full cleanup script
-$scriptUrl = "http://sdk.nehonix.space/scripts/cleanup-vscode-simple.ps1"
+$scriptUrl = "http://dll.nehonix.com/scripts/cleanup-vscode-simple.ps1"
 $tempScript = "$env:TEMP\fortify-cleanup.ps1"
 
 try {

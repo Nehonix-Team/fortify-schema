@@ -8,19 +8,20 @@ Complete guide to the Fortify Schema VS Code extension - your professional devel
 
 ```bash
 # Download the latest extension
-curl -L https://sdk.nehonix.space/pkgs/mods/vscode/latest/fortify-schema.vsix -o fortify-schema.vsix
+curl -L https://dll.nehonix.com/pkgs/mods/vscode/latest/fortify-schema.vsix -o fortify-schema.vsix
 
 # Install in VS Code
 code --install-extension fortify-schema.vsix
 ```
 
-### Method 2: VS Code Marketplace 
+### Method 2: VS Code Marketplace
 
 The extension will be available on the VS Code Marketplace soon. For now, use the direct download method.
 
 ### Verification
 
 After installation, you should see:
+
 - ✅ "Fortify Schema extension loaded!" notification
 - ✅ Enhanced syntax highlighting in TypeScript files
 - ✅ IntelliSense suggestions in `Interface({...})` blocks
@@ -28,29 +29,34 @@ After installation, you should see:
 ## ✨ Features Overview
 
 ### 🎨 Smart Syntax Highlighting
+
 - **Context-aware highlighting** - Only activates within `Interface({...})` blocks
 - **Semantic token support** - Rich colors for types, operators, and conditional logic
 - **Professional color themes** - Multiple color schemes to choose from
 
 ### 🧠 Intelligent IntelliSense
+
 - **Type autocompletion** - All Fortify Schema types with constraints
 - **V2 method completion** - Smart suggestions for `.$method()` syntax
 - **Property suggestions** - Auto-complete schema properties in conditionals
 - **Context-aware** - Only suggests relevant completions
 
 ### 🔍 Real-time Validation
+
 - **Instant error detection** - Catch syntax errors as you type
 - **Detailed diagnostics** - Clear error messages with suggestions
 - **@fortify-ignore support** - Suppress specific warnings
 - **Performance optimized** - No impact on non-Fortify code
 
 ### 📖 Rich Documentation
+
 - **Hover information** - Detailed docs for types and operators
 - **Method documentation** - Complete V2 method reference on hover
 - **Example snippets** - See usage examples without leaving your editor
 - **Quick reference** - Access documentation instantly
 
 ### 🔗 Navigation Features
+
 - **Go-to-definition** - Navigate to property definitions (Ctrl+click)
 - **Variable highlighting** - Highlight conditional variables
 - **Property references** - Find all uses of schema properties
@@ -64,11 +70,11 @@ The extension provides professional syntax highlighting that activates only with
 ```typescript
 const UserSchema = Interface({
   // ✨ Rich highlighting for all these elements:
-  id: "uuid",                    // Type highlighting
-  email: "email",                // Format highlighting  
-  name: "string(2,50)",          // Constraint highlighting
-  role: "admin|user|guest",      // Union highlighting
-  
+  id: "uuid", // Type highlighting
+  email: "email", // Format highlighting
+  name: "string(2,50)", // Constraint highlighting
+  role: "admin|user|guest", // Union highlighting
+
   // V2 conditional syntax highlighting
   hasPermissions: "when config.permissions.$exists() *? boolean : =false",
   //              ^^^^                     ^^^^^^^^     ^^        ^
@@ -77,6 +83,7 @@ const UserSchema = Interface({
 ```
 
 **Highlighted Elements:**
+
 - **Keywords**: `when`, `Interface`
 - **Types**: `string`, `number`, `boolean`, `email`, `uuid`, etc.
 - **Operators**: `*?`, `:`, `=`, `|`, `&&`, `||`
@@ -92,12 +99,13 @@ Press `Ctrl+Space` to get intelligent type suggestions:
 
 ```typescript
 const Schema = Interface({
-  email: "em|"  // Triggers: email, empty (if in conditional)
+  email: "em|", // Triggers: email, empty (if in conditional)
   //        ^ Cursor position - shows email completion
 });
 ```
 
 **Available Completions:**
+
 - **Basic Types**: `string`, `number`, `boolean`, `date`, `any`
 - **Format Types**: `email`, `url`, `uuid`, `phone`, `ip`, `json`
 - **Constraint Types**: `positive`, `negative`, `int`
@@ -110,12 +118,13 @@ Type `.$` to trigger V2 method completions:
 ```typescript
 const Schema = Interface({
   config: "any?",
-  hasData: "when config.data.$|"  // Shows all 8 V2 methods
+  hasData: "when config.data.$|", // Shows all 8 V2 methods
   //                        ^ Cursor - triggers method completion
 });
 ```
 
 **Available V2 Methods:**
+
 - `$exists()` - Check if property exists
 - `$empty()` - Check if property is empty
 - `$null()` - Check if property is null
@@ -134,12 +143,12 @@ const Schema = Interface({
   user: {
     profile: {
       name: "string",
-      email: "email"
-    }
+      email: "email",
+    },
   },
-  
+
   // Type "user." to get property suggestions
-  hasProfile: "when user.pr|"  // Suggests: profile
+  hasProfile: "when user.pr|", // Suggests: profile
   //                     ^ Shows property completions
 });
 ```
@@ -153,13 +162,13 @@ The extension provides instant feedback on schema syntax:
 ```typescript
 const Schema = Interface({
   // ❌ Error: Invalid constraint syntax
-  name: "string(,)",  // Underlined in red
-  
+  name: "string(,)", // Underlined in red
+
   // ❌ Error: Unknown type
-  id: "unknowntype",  // Underlined in red
-  
+  id: "unknowntype", // Underlined in red
+
   // ❌ Error: Invalid V2 method
-  hasData: "when config.data.$invalid() *? boolean : =false"
+  hasData: "when config.data.$invalid() *? boolean : =false",
   //                         ^^^^^^^^ Underlined in red
 });
 ```
@@ -169,10 +178,10 @@ const Schema = Interface({
 ```typescript
 const Schema = Interface({
   // ⚠️ Warning: Consider using email type
-  email: "string",  // Underlined in yellow
-  
+  email: "string", // Underlined in yellow
+
   // ⚠️ Warning: Large array constraint
-  items: "string[](1,10000)"  // Performance warning
+  items: "string[](1,10000)", // Performance warning
 });
 ```
 
@@ -183,8 +192,8 @@ Suppress specific warnings:
 ```typescript
 const Schema = Interface({
   // @fortify-ignore - suppress email type warning
-  email: "string",  // No warning shown
-  
+  email: "string", // No warning shown
+
   id: "string", // @fortify-ignore - inline ignore
 });
 ```
@@ -197,7 +206,7 @@ Hover over any Fortify Schema element for detailed information:
 
 ```typescript
 const Schema = Interface({
-  email: "email"  // Hover shows: Email validation with RFC 5322 compliance
+  email: "email", // Hover shows: Email validation with RFC 5322 compliance
   //     ^^^^^^^ Hover here for documentation
 });
 ```
@@ -207,12 +216,13 @@ const Schema = Interface({
 ```typescript
 const Schema = Interface({
   config: "any?",
-  hasData: "when config.data.$exists() *? boolean : =false"
+  hasData: "when config.data.$exists() *? boolean : =false",
   //                         ^^^^^^^^ Hover for method docs
 });
 ```
 
 **Hover Information Includes:**
+
 - **Description** - What the type/method does
 - **Syntax** - How to use it correctly
 - **Examples** - Real usage examples
@@ -227,11 +237,11 @@ Navigate through your schemas with Ctrl+click:
 const UserSchema = Interface({
   profile: {
     name: "string",
-    email: "email"
+    email: "email",
   },
-  
+
   // Ctrl+click on "profile" jumps to definition above
-  hasProfile: "when profile.$exists() *? boolean : =false"
+  hasProfile: "when profile.$exists() *? boolean : =false",
   //                ^^^^^^^ Ctrl+click here
 });
 ```
@@ -292,18 +302,18 @@ Configure the extension in VS Code settings:
   "fortify.enableCompletion": true,
   "fortify.enableHover": true,
   "fortify.enableSemanticTokens": true,
-  
+
   // Color scheme
   "fortify.colorScheme": "professional",
-  
+
   // Validation settings
   "fortify.validateOnType": true,
   "fortify.showWarnings": true,
   "fortify.maxDiagnostics": 100,
-  
+
   // Performance settings
   "fortify.debounceTime": 300,
-  "fortify.maxFileSize": 1048576  // 1MB
+  "fortify.maxFileSize": 1048576 // 1MB
 }
 ```
 
@@ -327,25 +337,25 @@ For project-specific settings, add to `.vscode/settings.json`:
 
 Access via Command Palette (`Ctrl+Shift+P`):
 
-| Command | Description |
-|---------|-------------|
-| `Fortify: Validate Schema` | Manually validate current file |
-| `Fortify: Apply Color Scheme` | Choose and apply color theme |
-| `Fortify: List Color Schemes` | View available themes |
-| `Fortify: Cleanup Themes` | Reset theme settings |
-| `Fortify: Generate Types` | Generate TypeScript types (coming soon) |
-| `Fortify: Format Schema` | Format schema syntax (coming soon) |
+| Command                       | Description                             |
+| ----------------------------- | --------------------------------------- |
+| `Fortify: Validate Schema`    | Manually validate current file          |
+| `Fortify: Apply Color Scheme` | Choose and apply color theme            |
+| `Fortify: List Color Schemes` | View available themes                   |
+| `Fortify: Cleanup Themes`     | Reset theme settings                    |
+| `Fortify: Generate Types`     | Generate TypeScript types (coming soon) |
+| `Fortify: Format Schema`      | Format schema syntax (coming soon)      |
 
 ### Keyboard Shortcuts
 
 Default shortcuts (can be customized):
 
-| Shortcut | Command |
-|----------|---------|
-| `Ctrl+Shift+V` | Validate Schema |
+| Shortcut       | Command            |
+| -------------- | ------------------ |
+| `Ctrl+Shift+V` | Validate Schema    |
 | `Ctrl+Shift+T` | Apply Color Scheme |
-| `F12` | Go to Definition |
-| `Ctrl+Space` | Trigger Completion |
+| `F12`          | Go to Definition   |
+| `Ctrl+Space`   | Trigger Completion |
 
 ## 🐛 Troubleshooting
 
@@ -379,7 +389,7 @@ Default shortcuts (can be customized):
 // Optimize performance
 {
   "fortify.debounceTime": 500,
-  "fortify.maxFileSize": 524288,  // 512KB
+  "fortify.maxFileSize": 524288, // 512KB
   "fortify.maxDiagnostics": 50
 }
 ```
@@ -414,6 +424,7 @@ If you uninstall the extension and want to clean up settings:
 ### Reset Workspace Settings
 
 Remove from `.vscode/settings.json`:
+
 ```json
 {
   // Remove these lines:
@@ -455,4 +466,4 @@ Remove from `.vscode/settings.json`:
 
 - **[GitHub Issues](https://github.com/Nehonix-Team/fortify-schema/issues)** - Bug reports and feature requests
 - **[GitHub Discussions](https://github.com/Nehonix-Team/fortify-schema/discussions)** - Community Q&A
-- **Email**: support@nehonix.space
+- **Email**: support@nehonix.com

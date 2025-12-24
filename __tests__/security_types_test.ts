@@ -431,7 +431,7 @@ const testData = {
   serverIp: "192.168.1.100",
   userPassword: "SecureP@ssw0rd123!",
   metadata: { createdAt: new Date(), version: "1.0.0" },
-  homepage: "https://nehonix.space",
+  homepage: "https://nehonix.com",
 };
 
 console.log("\nTesting valid combined data:");

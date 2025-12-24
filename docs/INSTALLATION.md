@@ -9,16 +9,19 @@
 ## Installation
 
 ### NPM
+
 ```bash
 npm install fortify-schema
 ```
 
 ### Yarn
+
 ```bash
 yarn add fortify-schema
 ```
 
 ### Bun
+
 ```bash
 bun add fortify-schema
 ```
@@ -53,7 +56,7 @@ code --install-extension fortify-schema-vscode-0.1.24.vsix
 # Or just search for "fortify-schema" in the vscode marketplace
 ```
 
-Download the latest extension from: [VS Code Extension](https://sdk.nehonix.space/pkgs/mods/vscode/latest/fortify-schema.vsix)
+Download the latest extension from: [VS Code Extension](https://dll.nehonix.com/pkgs/mods/vscode/latest/fortify-schema.vsix)
 
 ## Quick Start
 

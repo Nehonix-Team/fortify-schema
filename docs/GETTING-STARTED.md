@@ -1,10 +1,11 @@
 # Getting Started with Fortify Schema
 
 Welcome to Fortify Schema! This guide will get you up and running in minutes with TypeScript-first validation using interface-native syntax.
- 
+
 ## 🚀 Installation
 
 ### Requirements
+
 - **TypeScript 4.5+** or **JavaScript ES2020+**
 - **Node.js 14+** (for Node.js projects)
 - **Modern browser** (for browser projects)
@@ -31,7 +32,7 @@ For the best development experience, install our VS Code extension:
 
 ```bash
 # Download and install
-curl -L https://sdk.nehonix.space/pkgs/mods/vscode/latest/fortify-schema.vsix -o fortify-schema.vsix
+curl -L https://dll.nehonix.com/pkgs/mods/vscode/latest/fortify-schema.vsix -o fortify-schema.vsix
 code --install-extension fortify-schema.vsix
 ```
 
@@ -52,8 +53,8 @@ const UserSchema = Interface({
   id: "number",
   email: "email",
   name: "string",
-  age: "number?",        // Optional field
-  isActive: "boolean"
+  age: "number?", // Optional field
+  isActive: "boolean",
 });
 ```
 
@@ -66,7 +67,7 @@ const userData = {
   email: "john@example.com",
   name: "John Doe",
   age: 30,
-  isActive: true
+  isActive: true,
 };
 
 // Validate with safeParse (recommended)
@@ -91,13 +92,13 @@ Fortify Schema uses familiar TypeScript interface syntax:
 ```typescript
 // Looks like a TypeScript interface!
 const ProductSchema = Interface({
-  id: "uuid",                    // UUID validation
-  name: "string(1,100)",         // String with length constraints
+  id: "uuid", // UUID validation
+  name: "string(1,100)", // String with length constraints
   price: "number(0.01,9999.99)", // Number with range constraints
   category: "electronics|books|clothing", // Union types
   inStock: "boolean",
-  tags: "string[]?",             // Optional array
-  createdAt: "date"              // Date validation
+  tags: "string[]?", // Optional array
+  createdAt: "date", // Date validation
 });
 ```
 
@@ -149,17 +150,17 @@ const BasicSchema = Interface({
   age: "number",
   active: "boolean",
   birthday: "date",
-  
+
   // Optional types (add ?)
   nickname: "string?",
   bio: "string?",
-  
+
   // Arrays
   tags: "string[]",
   scores: "number[]?",
-  
+
   // Any type (use sparingly)
-  metadata: "any"
+  metadata: "any",
 });
 ```
 
@@ -168,18 +169,18 @@ const BasicSchema = Interface({
 ```typescript
 const ConstrainedSchema = Interface({
   // String constraints
-  username: "string(3,20)",      // 3-20 characters
-  password: "string(8,)",        // Minimum 8 characters
-  code: "string(6,6)",           // Exactly 6 characters
-  
+  username: "string(3,20)", // 3-20 characters
+  password: "string(8,)", // Minimum 8 characters
+  code: "string(6,6)", // Exactly 6 characters
+
   // Number constraints
-  age: "number(0,120)",          // Range 0-120
-  price: "number(0.01,)",        // Minimum 0.01
-  discount: "number(,0.5)",      // Maximum 0.5
-  
+  age: "number(0,120)", // Range 0-120
+  price: "number(0.01,)", // Minimum 0.01
+  discount: "number(,0.5)", // Maximum 0.5
+
   // Array constraints
-  tags: "string[](1,5)",         // 1-5 items
-  scores: "number[](,10)"        // Maximum 10 items
+  tags: "string[](1,5)", // 1-5 items
+  scores: "number[](,10)", // Maximum 10 items
 });
 ```
 
@@ -191,10 +192,10 @@ const FormatSchema = Interface({
   website: "url",
   phone: "phone",
   userId: "uuid",
-  
+
   // Custom regex patterns
   zipCode: "string(/^\\d{5}(-\\d{4})?$/)",
-  productCode: "string(/^[A-Z]{2}\\d{4}$/)"
+  productCode: "string(/^[A-Z]{2}\\d{4}$/)",
 });
 ```
 
@@ -205,10 +206,10 @@ const UnionSchema = Interface({
   status: "active|inactive|pending",
   role: "admin|user|guest|moderator",
   theme: "light|dark|auto",
-  
+
   // Mixed type unions
   id: "string|number",
-  value: "string|number|boolean"
+  value: "string|number|boolean",
 });
 ```
 
@@ -222,11 +223,11 @@ Fortify Schema V2 introduces powerful conditional validation with runtime proper
 const ConditionalSchema = Interface({
   role: "admin|user|guest",
   config: "any?",
-  
+
   // V2 Runtime Methods
   hasPermissions: "when config.permissions.$exists() *? boolean : =false",
   isAdmin: "when role=admin *? boolean : =false",
-  canEdit: "when role.$in(admin,moderator) *? boolean : =false"
+  canEdit: "when role.$in(admin,moderator) *? boolean : =false",
 });
 ```
 
@@ -235,26 +236,28 @@ const ConditionalSchema = Interface({
 ```typescript
 const V2MethodsSchema = Interface({
   data: "any?",
-  
+
   // Property existence
   hasData: "when data.field.$exists() *? boolean : =false",
-  
+
   // Empty checking
   isEmpty: "when data.list.$empty() *? boolean : =true",
-  
+
   // Null checking
   isNull: "when data.value.$null() *? boolean : =false",
-  
+
   // String methods
-  containsText: "when data.description.$contains(important) *? boolean : =false",
+  containsText:
+    "when data.description.$contains(important) *? boolean : =false",
   startsWithPrefix: "when data.code.$startsWith(PRE) *? boolean : =false",
   endsWithSuffix: "when data.filename.$endsWith(.pdf) *? boolean : =false",
-  
+
   // Numeric range
   inRange: "when data.score.$between(0,100) *? boolean : =false",
-  
+
   // Value inclusion
-  isValidStatus: "when data.status.$in(active,pending,inactive) *? boolean : =false"
+  isValidStatus:
+    "when data.status.$in(active,pending,inactive) *? boolean : =false",
 });
 ```
 
@@ -270,15 +273,15 @@ const UserRegistrationSchema = Interface({
   email: "email",
   password: "string(8,128)",
   confirmPassword: "string(8,128)",
-  
+
   // Profile
   profile: {
     firstName: "string(1,50)",
     lastName: "string(1,50)",
     dateOfBirth: "date?",
-    avatar: "url?"
+    avatar: "url?",
   },
-  
+
   // Preferences
   preferences: {
     theme: "light|dark|auto",
@@ -286,23 +289,23 @@ const UserRegistrationSchema = Interface({
     notifications: {
       email: "boolean",
       push: "boolean",
-      sms: "boolean"
-    }
+      sms: "boolean",
+    },
   },
-  
+
   // Terms and conditions
   acceptedTerms: "boolean",
   acceptedPrivacy: "boolean",
-  
+
   // Optional marketing consent
   marketingConsent: "boolean?",
-  
+
   // Runtime configuration for conditional validation
   config: "any?",
-  
+
   // Conditional fields based on configuration
   betaFeatures: "when config.beta.$exists() *? string[] : =[]",
-  premiumFeatures: "when config.premium.$exists() *? any : =null"
+  premiumFeatures: "when config.premium.$exists() *? any : =null",
 });
 
 // Usage
@@ -313,7 +316,7 @@ const registrationData = {
   profile: {
     firstName: "John",
     lastName: "Doe",
-    dateOfBirth: new Date("1990-01-01")
+    dateOfBirth: new Date("1990-01-01"),
   },
   preferences: {
     theme: "dark",
@@ -321,12 +324,12 @@ const registrationData = {
     notifications: {
       email: true,
       push: false,
-      sms: false
-    }
+      sms: false,
+    },
   },
   acceptedTerms: true,
   acceptedPrivacy: true,
-  marketingConsent: false
+  marketingConsent: false,
 };
 
 const result = UserRegistrationSchema.safeParse(registrationData);
@@ -336,8 +339,8 @@ if (result.success) {
   // Process registration with result.data
 } else {
   console.log("❌ Validation errors:");
-  result.errors.forEach(error => {
-    console.log(`- ${error.path.join('.')}: ${error.message}`);
+  result.errors.forEach((error) => {
+    console.log(`- ${error.path.join(".")}: ${error.message}`);
   });
 }
 ```

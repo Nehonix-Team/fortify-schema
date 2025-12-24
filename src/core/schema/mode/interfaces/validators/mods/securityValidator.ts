@@ -44,7 +44,7 @@ export class SecurityValidators {
       // security schema with more comprehensive protections
       this.ajv.addSchema(
         {
-          $id: "https://nehonix.space/lib/v/fortify-schema",
+          $id: "https://nehonix.com/lib/v/fortify-schema",
           type: ["object", "array", "string", "number", "boolean", "null"],
           definitions: {
             secureObject: {

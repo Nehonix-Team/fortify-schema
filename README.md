@@ -4,33 +4,76 @@
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![Build Status](https://github.com/Nehonix-Team/fortify-schema/workflows/CI/badge.svg)](https://github.com/Nehonix-Team/fortify-schema/actions)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/fortify-schema)](https://bundlephobia.com/package/fortify-schema)
-[![VS Code Extension](https://img.shields.io/badge/VS%20Code-Extension%20Available-blue)](https://sdk.nehonix.space/pkgs/mods/vscode/latest/fortify-schema.vsix)
 
 <div align="center">
-  <img src="https://sdk.nehonix.space/sdks/assets/fortify%20schema.jpg" alt="Fortify Schema Logo" width="250" />
+  <img src="https://dll.nehonix.com/sdks/assets/fortify%20schema.jpg" alt="Fortify Schema Logo" width="250" />
 </div>
+
+---
+
+## Important: Migration to Reliant-Type
+
+**The `fortify-schema` package is being deprecated and replaced by [`reliant-type`](https://www.npmjs.com/package/reliant-type).**
+
+While `fortify-schema` will continue to receive critical security patches, all new features, performance improvements, and ongoing development are now focused exclusively on `reliant-type`. We strongly recommend migrating to `reliant-type` for:
+
+- **Latest features and improvements** - All new capabilities are built into `reliant-type`
+- **Active development** - Ongoing enhancements and optimizations
+- **Long-term support** - Full maintenance and community support
+- **Enhanced performance** - Significant speed and efficiency gains
+- **Expanded ecosystem** - Growing tooling and integration support
+
+**Migration is straightforward** - `reliant-type` maintains API compatibility with `fortify-schema` core features while introducing powerful new capabilities. See our [Migration Guide](./docs/MIGRATION-TO-RELIANT-TYPE.md) for step-by-step instructions.
+
+### Quick Migration Example
+
+```typescript
+// Before (fortify-schema)
+import { Interface } from "fortify-schema";
+
+// After (reliant-type)
+import { Interface } from "reliant-type";
+
+// Your existing schemas work without modification
+const UserSchema = Interface({
+  id: "uuid",
+  email: "email!",
+  name: "string(2,50)",
+});
+```
+
+---
+
+## Overview
+
+**Fortify Schema** is a TypeScript validation library featuring interface-like syntax and advanced conditional validation. Designed for TypeScript developers who value familiar patterns and powerful runtime validation capabilities.
 
 <div align="center">
-  <img src="https://sdk.nehonix.space/sdks/assets/vscode-extension-preview.gif" alt="VSCode extension preview" width="500" />
+  <img src="https://dll.nehonix.com/sdks/assets/vscode-extension-preview.gif" alt="VSCode extension preview" width="500" />
 </div>
 
-**TypeScript Schema Validation with Interface-Like Syntax**
+### Key Capabilities
 
-A modern TypeScript validation library designed around familiar interface syntax and powerful conditional validation. Experience schema validation that feels natural to TypeScript developers while unlocking advanced runtime validation capabilities.
+- **Interface-like Syntax** - Define schemas using TypeScript-style interface definitions
+- **Advanced Conditionals** - Implement complex business logic with `when` expressions
+- **Custom Error Messages** - Provide context-specific validation feedback using the `-->` operator
+- **Complete Type Safety** - Full TypeScript inference with zero runtime overhead
+- **High Performance** - Automatic precompilation and optimization
+- **Professional Tooling** - VS Code extension with IntelliSense and real-time validation
 
-## 🆕 What's New
-
-- **Custom Error Messages (`-->`)**: Define user-friendly error messages with `"type --> Your custom message"`
-- **Required Fields (`!`)**: Enforce non-empty strings and non-zero numbers with `"string!"` and `"number!"`
-- **Object Types**: Validate generic object structures with `"object"` and `"object?"`
-- **Enhanced Security**: All string operations now use secure regex patterns
-- **Improved Performance**: Optimized validation paths with better caching and precompilation
-
-## ✨ Quick Start
+## Installation
 
 ```bash
 npm install fortify-schema
 ```
+
+**Note:** For new projects, consider starting with `reliant-type` instead:
+
+```bash
+npm install reliant-type
+```
+
+## Quick Start
 
 ```typescript
 import { Interface } from "fortify-schema";
@@ -38,13 +81,13 @@ import { Interface } from "fortify-schema";
 // Define schemas with familiar TypeScript-like syntax
 const UserSchema = Interface({
   id: "uuid",
-  email: "email! --> Please provide a valid email address", 
-  name: "string(2,50) --> Name must be between 2 and 50 characters", 
+  email: "email! --> Please provide a valid email address",
+  name: "string(2,50) --> Name must be between 2 and 50 characters",
   age: "number(18,120)? --> Age must be between 18 and 120",
   role: "admin|user|guest --> Role must be admin, user, or guest",
   tags: "string[]",
   metadata: "record<string, any>",
-  
+
   // Advanced conditional validation
   permissions: "when role=admin *? string[] : =[]",
 });
@@ -52,61 +95,77 @@ const UserSchema = Interface({
 // Validate with complete TypeScript inference
 const result = UserSchema.safeParse(userData);
 if (result.success) {
-  console.log("Valid user:", result.data); // Fully typed!
+  console.log("Valid user:", result.data); // Fully typed
 } else {
   console.log("Validation errors:", result.errors);
-  // Custom error messages appear here!
 }
 ```
 
-## 🎯 Key Features
+## Core Features
 
-### 🔤 Intuitive Syntax
-Write schemas using TypeScript-like interface definitions that feel natural and familiar.
+### Type System
 
-### ⚡ Advanced Conditionals
-Unique runtime property validation and business logic with `when` expressions.
+Comprehensive support for primitive types, collections, and advanced formats:
 
-### 🎨 Custom Error Messages
-Provide user-friendly, context-specific error messages with the `-->` operator.
+- **Primitives** - `string`, `number`, `boolean`, `null`, `undefined`
+- **Specialized** - `email`, `url`, `uuid`, `date`, `iso8601`
+- **Collections** - Arrays (`string[]`), Records (`record<string, any>`)
+- **Objects** - Generic object validation with `object` and `object?`
+- **Unions** - Enumerated values with `admin|user|guest`
 
-### 🔒 Type Safety
-Complete TypeScript inference and compile-time validation with zero compromises.
+### Validation Modifiers
 
-### 🚀 High Performance
-Automatic precompilation and optimization for production-grade performance.
+- **Optional** - Mark fields as optional with `?` suffix (e.g., `"string?"`)
+- **Required** - Enforce non-empty values with `!` suffix (e.g., `"email!"`)
+- **Constraints** - Apply ranges and limits with `(min,max)` syntax
+- **Custom Messages** - Define user-friendly errors with `-->` operator
 
-### 🛠️ VS Code Extension
-Professional IDE integration with syntax highlighting, IntelliSense, and real-time validation.
+### Conditional Validation
 
-## 📚 Documentation
+Implement complex business rules based on runtime data:
+
+```typescript
+const ProductSchema = Interface({
+  inStock: "boolean",
+  discount: "when inStock=true *? number(0,100)? : =0",
+  maxQuantity: "when inStock=true *? int(1,1000) : int(1,10)",
+});
+```
+
+## Documentation
 
 ### Getting Started
-- [Installation & Setup](./docs/INSTALLATION.md) - Get up and running quickly
-- [Core Features](./docs/CORE-FEATURES.md) - Learn all available types and validators
-- [Quick Examples](./examples/) - Real-world usage examples
+
+- [Installation & Setup](./docs/INSTALLATION.md)
+- [Core Features](./docs/CORE-FEATURES.md)
+- [Quick Examples](./examples/)
+- [Migration to Reliant-Type](./docs/MIGRATION-TO-RELIANT-TYPE.md)
 
 ### Core Concepts
-- [Type System](./docs/CORE-FEATURES.md#comprehensive-type-support) - All available types
-- [Constraints](./docs/CORE-FEATURES.md#constraints) - Min/max, length, range validation
-- [Modifiers](./docs/CORE-FEATURES.md#type-modifiers) - Optional (`?`), Required (`!`)
-- [Custom Error Messages](./docs/CUSTOM-ERROR-MESSAGES.md) - User-friendly validation feedback
+
+- [Type System](./docs/CORE-FEATURES.md#comprehensive-type-support)
+- [Constraints](./docs/CORE-FEATURES.md#constraints)
+- [Modifiers](./docs/CORE-FEATURES.md#type-modifiers)
+- [Custom Error Messages](./docs/CUSTOM-ERROR-MESSAGES.md)
 
 ### Advanced Features
-- [Conditional Validation](./docs/CONDITIONAL-VALIDATION-GUIDE.md) - Runtime business logic
-- [Utility Functions](./docs/CORE-FEATURES.md#utility-functions) - Make.const(), Record types
-- [Schema Transformation](./docs/API-REFERENCE.md#mod-utilities) - Pick, Omit, Merge, Partial
-- [Live Validation](./docs/LIVE-UTILITY.md) - Real-time validation with EventEmitter
+
+- [Conditional Validation](./docs/CONDITIONAL-VALIDATION-GUIDE.md)
+- [Utility Functions](./docs/CORE-FEATURES.md#utility-functions)
+- [Schema Transformation](./docs/API-REFERENCE.md#mod-utilities)
+- [Live Validation](./docs/LIVE-UTILITY.md)
 
 ### Reference
-- [API Reference](./docs/API-REFERENCE.md) - Complete API documentation
-- [Type Inference](./docs/TYPE-INFERENCE.md) - TypeScript integration
-- [Error Handling](./docs/API-REFERENCE.md#error-handling) - Error structure and patterns
-- [Performance Guide](./docs/PERFORMANCE.md) - Optimization tips
 
-## 🔥 Popular Use Cases
+- [API Reference](./docs/API-REFERENCE.md)
+- [Type Inference](./docs/TYPE-INFERENCE.md)
+- [Error Handling](./docs/API-REFERENCE.md#error-handling)
+- [Performance Guide](./docs/PERFORMANCE.md)
+
+## Common Use Cases
 
 ### Form Validation
+
 ```typescript
 const FormSchema = Interface({
   email: "email! --> Please enter a valid email",
@@ -116,7 +175,8 @@ const FormSchema = Interface({
 });
 ```
 
-### API Validation
+### API Request Validation
+
 ```typescript
 const APIRequestSchema = Interface({
   method: "GET|POST|PUT|DELETE",
@@ -126,7 +186,8 @@ const APIRequestSchema = Interface({
 });
 ```
 
-### E-Commerce
+### E-Commerce Products
+
 ```typescript
 const ProductSchema = Interface({
   id: "uuid",
@@ -139,6 +200,7 @@ const ProductSchema = Interface({
 ```
 
 ### User Management
+
 ```typescript
 const UserSchema = Interface({
   id: "uuid",
@@ -149,28 +211,29 @@ const UserSchema = Interface({
 });
 ```
 
-## 🎨 VS Code Extension
+## VS Code Extension
 
-Enhance your development experience with our dedicated VS Code extension:
+Enhance your development workflow with professional IDE integration:
 
-- **Syntax Highlighting** - Beautiful highlighting for all schema types
-- **IntelliSense** - Smart autocompletion and suggestions
-- **Hover Documentation** - Detailed docs and examples on hover
-- **Error Detection** - Real-time validation of schema syntax
+- **Syntax Highlighting** - Comprehensive highlighting for schema types
+- **IntelliSense** - Context-aware autocompletion
+- **Hover Documentation** - Inline documentation and examples
+- **Error Detection** - Real-time schema syntax validation
 - **Code Snippets** - Pre-built templates for common patterns
 
-[Download Extension](https://sdk.nehonix.space/pkgs/mods/vscode/latest/fortify-schema.vsix) | [Extension Docs](./vscode-extension/readme.md)
+[Download Extension](https://dll.nehonix.com/pkgs/mods/vscode/latest/fortify-schema.vsix) | [Extension Documentation](./vscode-extension/readme.md)
 
-## 🚀 Performance
+## Performance
 
-Fortify Schema is engineered for high-performance validation:
+Fortify Schema is optimized for production environments:
 
-- **Fast Validation**: Optimized validation paths with precompilation
-- **Memory Efficient**: Minimal memory overhead per schema instance
-- **Scalable**: Performance scales predictably with data complexity
-- **Benchmarked**: Continuous performance monitoring
+- **Fast Validation** - Optimized execution paths with schema precompilation
+- **Memory Efficient** - Minimal overhead per schema instance
+- **Scalable** - Predictable performance across data complexity levels
+- **Benchmarked** - Continuous performance monitoring and optimization
 
-Run benchmarks:
+Run benchmarks locally:
+
 ```bash
 npm run benchmark
 npm run benchmark:nestedObject
@@ -178,58 +241,64 @@ npm run benchmark:nestedObject
 
 [View Benchmark Results](./src/bench/BENCHMARK-RESULTS.md)
 
-## 🤝 Community & Support
+## Comparison
+
+| Feature                | Fortify Schema | Reliant-Type | Zod     | Yup     | Joi     |
+| ---------------------- | -------------- | ------------ | ------- | ------- | ------- |
+| Interface-like syntax  | Yes            | Yes          | No      | No      | No      |
+| Conditional validation | Yes            | Enhanced     | Limited | No      | Limited |
+| Custom error messages  | Yes            | Yes          | Yes     | Yes     | Yes     |
+| TypeScript inference   | Full           | Full         | Full    | Limited | No      |
+| VS Code extension      | Yes            | Yes          | No      | No      | No      |
+| Active development     | Maintenance    | Active       | Active  | Active  | Active  |
+| Bundle size            | Small          | Small        | Medium  | Large   | Large   |
+
+**Note:** `reliant-type` represents the evolution of `fortify-schema` with enhanced capabilities and ongoing development.
+
+## Community & Support
 
 ### Get Help
+
 - [GitHub Issues](https://github.com/Nehonix-Team/fortify-schema/issues) - Bug reports and feature requests
-- [Discord Community](https://discord.gg/nehonix) - Chat with the community
-- [Documentation](./docs/) - Comprehensive guides and references
+- [Discord Community](https://discord.gg/nehonix) - Community discussions
+- [Documentation](./docs/) - Comprehensive guides and API reference
 
 ### Contributing
-We welcome contributions! See our [Contributing Guide](./CONTRIBUTING.md) for details.
+
+Contributions are welcome. Please review our [Contributing Guide](./CONTRIBUTING.md) before submitting pull requests.
 
 - Report bugs and request features
 - Submit pull requests
 - Improve documentation
-- Share your use cases
+- Share use cases and feedback
 
 ### Stay Updated
-- ⭐ Star us on [GitHub](https://github.com/Nehonix-Team/fortify-schema)
-- 📦 Follow on [NPM](https://www.npmjs.com/package/fortify-schema)
-- 💬 Join our [Discord](https://discord.gg/nehonix)
 
-## 📊 Comparison
+- Star us on [GitHub](https://github.com/Nehonix-Team/fortify-schema)
+- Follow on [NPM](https://www.npmjs.com/package/fortify-schema)
+- Join our [Discord](https://discord.gg/nehonix)
 
-| Feature | Fortify Schema | Zod | Yup | Joi |
-|---------|---------------|-----|-----|-----|
-| Interface-like syntax | ✅ | ❌ | ❌ | ❌ |
-| Conditional validation | ✅ | ⚠️ Limited | ❌ | ⚠️ Limited |
-| Custom error messages | ✅ | ✅ | ✅ | ✅ |
-| TypeScript inference | ✅ | ✅ | ⚠️ Limited | ❌ |
-| VS Code extension | ✅ | ❌ | ❌ | ❌ |
-| Bundle size | Small | Medium | Large | Large |
-| Performance | Excellent | Good | Good | Good |
-
-## 📄 License
+## License
 
 MIT © [Nehonix Team](https://github.com/Nehonix-Team/fortify-schema)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-Built with ❤️ by the Nehonix Team and our amazing contributors.
+Developed by the Nehonix Team with contributions from the open-source community.
 
-Special thanks to:
-- The TypeScript team for an amazing language
-- The open-source community for inspiration and feedback
-- All our contributors and users
+Special recognition to:
+
+- The TypeScript team for language innovation
+- The open-source community for feedback and contributions
+- All contributors and users of Fortify Schema
 
 ---
 
 <div align="center">
   <strong>Ready to get started?</strong>
   <br>
+  <a href="./docs/MIGRATION-TO-RELIANT-TYPE.md">Migrate to Reliant-Type</a> •
   <a href="./docs/INSTALLATION.md">Installation Guide</a> •
   <a href="./docs/CORE-FEATURES.md">Core Features</a> •
-  <a href="./docs/API-REFERENCE.md">API Reference</a> •
-  <a href="./examples/">Examples</a>
+  <a href="./docs/API-REFERENCE.md">API Reference</a>
 </div>
